@@ -35,6 +35,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 
 WORKDIR /var/www
 
+# Настраиваем PHP-FPM на слушание всех интерфейсов
+RUN sed -i 's/listen = 127\.0\.0\.1:9000/listen = 0.0.0.0:9000/' /usr/local/etc/php-fpm.d/www.conf
+
+
 # Entrypoint
 COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
