@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: turnstile_app
+    ports:
+      - "9000:9000"
     env_file:
       - .env
     volumes:
