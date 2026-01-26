@@ -1,13 +1,16 @@
+version: "3.9"
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: docker/php/Dockerfile
+    image: turnstile-app:latest
     container_name: turnstile_app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9000:9000"
     env_file:
-      - .env
+      - .env.prod
     volumes:
-      - ./:/var/www
+      - /var/www/turnstile:/var/www
     depends_on:
       - db
 
