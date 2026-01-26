@@ -7,7 +7,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 use Illuminate\Database\Eloquent\Builder;
 
 trait DynamicFilterTrait
@@ -72,8 +72,9 @@ trait DynamicFilterTrait
 
     public static function makeRangeFilter(string $key, array $config)
     {
-        
+
         $column = $config['column'] ?? $key;
+        $label = $config['label'] ?? ucfirst($key);
 
         return Filter::make($key)
             ->label($label)

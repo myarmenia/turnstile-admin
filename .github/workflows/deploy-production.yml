@@ -1,0 +1,69 @@
+name: 🚀 Deploy Turnstile Admin (Production)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PROD_TURNSTILE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 22 ${{ secrets.PROD_TURNSTILE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@main
+        with:
+          host: ${{ secrets.PROD_TURNSTILE_HOST }}
+          username: ${{ secrets.PROD_TURNSTILE_USER }}
+          key: ${{ secrets.PROD_TURNSTILE_KEY }}
+          port: 22
+          script: |
+            cd /var/www/turnstile-admin
+
+            echo "🔹 Обновляем код..."
+            git reset --hard
+            git fetch --all
+            git checkout main
+            git pull origin main
+
+            echo "🔹 Обновляем контейнеры..."
+            docker compose -p turnstile-prod pull
+            docker compose -p turnstile-prod up -d --build
+
+            echo "🧹 Чистим контейнеры проекта..."
+            docker container prune -f --filter "label=com.docker.compose.project=turnstile-prod"
+
+            echo "🧹 Чистим образы..."
+            docker image prune -f
+
+            echo "🔹 Проверяем composer..."
+            if git diff --name-only HEAD~1 | grep -E "composer(\.lock)?\.json" > /dev/null; then
+              docker compose -p turnstile-prod exec -T app composer install --no-interaction --optimize-autoloader
+            fi
+
+            echo "🔹 Проверяем npm..."
+            if git diff --name-only HEAD~1 | grep -E "package(-lock)?\.json" > /dev/null; then
+              docker compose -p turnstile-prod exec -T app rm -rf node_modules package-lock.json
+              docker compose -p turnstile-prod exec -T app npm install
+            fi
+
+            echo "🔹 Сборка фронта (Filament / Vite)..."
+            docker compose -p turnstile-prod exec -T app npm run build
+
+            echo "🔹 Миграции..."
+            docker compose -p turnstile-prod exec -T app php artisan migrate --force
+
+            echo "🔹 Кеши Laravel..."
+            docker compose -p turnstile-prod exec -T app php artisan optimize:clear
+
+            echo "✅ Deploy turnstile-admin completed!"

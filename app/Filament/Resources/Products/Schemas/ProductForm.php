@@ -8,6 +8,7 @@ use App\Services\Categories\CategoryService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Tabs;
@@ -127,10 +128,10 @@ class ProductForm
                 ->label('Slug')
                 ->required(),
 
-            TextInput::make("translations.{$locale}.description")
+            Textarea::make("translations.{$locale}.description")
                 ->label('Описание'),
 
-            TextInput::make("translations.{$locale}.specifications")
+            Textarea::make("translations.{$locale}.specifications")
                 ->label('Характеристика'),
         ]);
     }

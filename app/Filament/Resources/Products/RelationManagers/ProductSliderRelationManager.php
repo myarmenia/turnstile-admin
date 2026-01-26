@@ -15,26 +15,4 @@ class ProductSliderRelationManager extends BaseProductFilesRelationManager
     protected static ?string $title = 'Слайдер';
 }
 
-// class ProductSliderRelationManager extends BaseImageRelationManager
-// {
-//     protected static string $role = 'slider';
-//     // protected static string $directory = 'products/slider';
 
-//     // protected static ?string $title = 'Слайдер';
-//     public function table(Table $table): Table
-//     {
-//         return $table
-//             ->columns([
-//                 ImageColumn::make('path_url')
-//                     ->label('Предпросмотр')
-//                     ->height(100)
-//                     ->width(100)
-//                     ->square(),
-//                 TextColumn::make('role')->label('Роль'),
-//             ])
-//             ->actions([
-//                 DeleteAction::make(),
-//             ])
-//             ->headerActions([]);
-//     }
-// }
