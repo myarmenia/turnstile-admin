@@ -8,6 +8,7 @@ interface BaseInterface
 {
     public function getAll(array $with = []): mixed;
     public function getById(int $id, array $with = []): Model;
+    public function getByParam(string $param, string $value, array $with = []): Model;
     public function getBySlug(string $slug, array $with = []): Model;
     public function findBy(array $conditions, array $with = []): ?Model;
     public function store(array $data): Model;

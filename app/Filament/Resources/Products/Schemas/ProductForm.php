@@ -7,6 +7,7 @@ use App\Models\CategoryTranslation;
 use App\Services\Categories\CategoryService;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -128,10 +129,13 @@ class ProductForm
                 ->label('Slug')
                 ->required(),
 
-            Textarea::make("translations.{$locale}.description")
+            // Textarea::make("translations.{$locale}.description")
+            //     ->label('Описание'),
+            RichEditor::make("translations.{$locale}.description")
                 ->label('Описание'),
 
-            Textarea::make("translations.{$locale}.specifications")
+
+            RichEditor::make("translations.{$locale}.specifications")
                 ->label('Характеристика'),
         ]);
     }

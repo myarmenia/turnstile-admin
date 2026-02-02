@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->string('code')->unique();
+            $table->boolean('active')->default(true);
             $table->integer('price')->nullable();
             $table->integer('discount_price')->nullable();
             $table->timestamps();

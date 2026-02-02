@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Filament\Traits\DynamicFilterTrait;
 use App\Models\Traits\HasFiles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
@@ -13,6 +14,11 @@ class Product extends Model
 
     protected $guarded = [];
     // public $appends = ['name'];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function translations(): HasMany
     {
@@ -34,6 +40,11 @@ class Product extends Model
             ->where('locale', app()->getLocale())
             ->first()
             ?->name;
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
     }
 
 }
