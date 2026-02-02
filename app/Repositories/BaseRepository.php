@@ -26,6 +26,12 @@ abstract class BaseRepository implements BaseInterface
         return $this->model->with($with)->findOrFail($id);
     }
 
+    public function getByParam(string $param, string $value, array $with = []): Model
+    {
+        return $this->model->with($with)->where($param, $value)->firstOrFail();
+    }
+
+    
     public function getBySlug(string $slug, array $with = []): Model
     {
 

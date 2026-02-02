@@ -38,13 +38,6 @@ trait HasFiles
             ->get();
     }
 
-    // public function additionalImages()
-    // {
-    //     return $this->files()
-    //         ->wherePivot('role', 'additional')
-    //         ->orderBy('pivot_sort_order')
-    //         ->get();
-    // }
 
     public function additionalFiles()
     {
@@ -58,6 +51,11 @@ trait HasFiles
     public function videos()
     {
         return $this->files()->wherePivot('role', 'video')->get();
+    }
+
+    public function documents()
+    {
+        return $this->files()->wherePivot('role', 'document')->get();
     }
 
     // public function addFiles(array $paths, string $role): void
@@ -99,21 +97,7 @@ trait HasFiles
         }
     }
 
-    // ===== SYNC =====
 
-    // public function syncFiles(array $paths, string $role): void
-    // {
-    //     $this->files()->wherePivot('role', $role)->detach();
-
-    //     foreach ($paths as $index => $path) {
-    //         $file = File::createFromPath($path);
-
-    //         $this->files()->attach($file->id, [
-    //             'role' => $role,
-    //             'sort_order' => $index,
-    //         ]);
-    //     }
-    // }
 
     public function syncSingleFile(?string $path, string $role): void
     {
