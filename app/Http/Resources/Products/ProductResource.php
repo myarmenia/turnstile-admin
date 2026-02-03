@@ -27,25 +27,65 @@ class ProductResource extends JsonResource
             'specifications' => $translation?->specifications,
             'category_slug' => $categorySlug,
             // ===== FILES =====
-            'main_image' => $this->mainImage()
-                ? asset('storage/' . $this->mainImage()->path)
-                : null,
 
-            'slider_images' => $this->sliderImages()
-                ->map(fn($file) => asset('storage/' . $file->path))
-                ->toArray(),
+            'main_image' => $this->getMainImageForApi($lang),
 
-            'additional_files' => $this->additionalFiles()
-                ->map(fn($file) => asset('storage/' . $file->path))
-                ->toArray(),
+            'slider_images' => $this->getFilesByRoleForApi('slider', $lang),
 
-            'videos' => $this->videos()
-                ->map(fn($file) => asset('storage/' . $file->path))
-                ->toArray(),
+            'additional_files' => $this->getFilesByRoleForApi('additional', $lang),
 
-            'documents' => $this->documents()
-                ->map(fn($file) => asset('storage/' . $file->path))
-                ->toArray(),
+            'videos' => $this->getFilesByRoleForApi('video', $lang),
+
+            'documents' => $this->getFilesByRoleForApi('document', $lang),
+
+            // 'main_image' => $this->mainImage()
+            //     ? asset('storage/' . $this->mainImage()->path)
+            //     : null,
+
+            // 'slider_images' => $this->sliderImages()
+            //     ->map(fn($file) => asset('storage/' . $file->path))
+            //     ->toArray(),
+
+            // 'additional_files' => $this->additionalFiles()
+            //     ->map(fn($file) => asset('storage/' . $file->path))
+            //     ->toArray(),
+
+            // 'videos' => $this->videos()
+            //     ->map(fn($file) => asset('storage/' . $file->path))
+            //     ->toArray(),
+
+            // 'documents' => $this->documents()
+            //     ->map(fn($file) => asset('storage/' . $file->path))
+            //     ->toArray(),
+        ];
+    }
+
+
+    private function getFileWithTranslations($file, string $lang): ?array
+    {
+        if (!$file) {
+            return null;
+        }
+
+        // Находим перевод для указанного языка
+        $translation = $file->translations->firstWhere('lang', $lang);
+
+        // Если перевод не найден, пробуем получить русский как fallback
+        if (!$translation && $lang !== 'ru') {
+            $translation = $file->translations->firstWhere('lang', 'ru');
+        }
+
+        // Если русский тоже не найден, берем первый доступный
+        if (!$translation && $file->translations->isNotEmpty()) {
+            $translation = $file->translations->first();
+        }
+
+        return [
+            'url' => asset('storage/' . $file->path),
+            'title' => $translation?->title ?? '',
+            'alt' => $translation?->alt ?? '',
+
+            'type' => $file->type
         ];
     }
 }
