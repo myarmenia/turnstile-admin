@@ -48,14 +48,25 @@ class ProductForm
                         ->searchable()
                         ->required(),
 
-                   Select::make('supplier_id')
+                //    Select::make('supplier_id')
+                //         ->label('Поставщик')
+                //         ->relationship('supplier', 'user_name') // предполагается foreign key supplier_id
+                //         ->searchable()
+                //         ->getOptionLabelUsing(function ($value) {
+                //             $supplier = Supplier::find($value);
+                //             return $supplier ? $supplier->user_name . ' - ' . $supplier->company_name : null;
+                //         }),
+
+                
+
+                    Select::make('supplier_id')
                         ->label('Поставщик')
-                        ->relationship('supplier', 'user_name') // предполагается foreign key supplier_id
+                        ->options(Supplier::query()->pluck('user_name', 'id'))
                         ->searchable()
-                        ->getOptionLabelUsing(function ($value) {
-                            $supplier = Supplier::find($value);
-                            return $supplier ? $supplier->user_name . ' - ' . $supplier->company_name : null;
-                        }),
+                        ->getOptionLabelFromRecordUsing(
+                            fn(Supplier $supplier) =>
+                            $supplier->user_name . ' - 111' . $supplier->company_name
+                        ),
 
 
                     TextInput::make('price')
@@ -132,7 +143,7 @@ class ProductForm
                                     ->maxLength(255)
                                     ->afterStateHydrated(function ($component, $state) use ($lang) {
                                         $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product->mainImage();
+                                        $mainImage = $product?->mainImage();
 
                                         if ($mainImage) {
                                             $translation = $mainImage->translations()->where('lang', $lang)->first();
@@ -147,7 +158,7 @@ class ProductForm
                                     ->maxLength(255)
                                     ->afterStateHydrated(function ($component, $state) use ($lang) {
                                         $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product->mainImage();
+                                        $mainImage = $product?->mainImage();
 
                                         if ($mainImage) {
                                             $translation = $mainImage->translations()->where('lang', $lang)->first();
@@ -227,7 +238,7 @@ class ProductForm
                                     ->maxLength(255)
                                     ->afterStateHydrated(function ($component, $state) use ($lang) {
                                         $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product->mainImage();
+                                        $mainImage = $product?->mainImage();
 
                                         if ($mainImage) {
                                             $translation = $mainImage->translations()->where('lang', $lang)->first();
@@ -242,7 +253,7 @@ class ProductForm
                                     ->maxLength(255)
                                     ->afterStateHydrated(function ($component, $state) use ($lang) {
                                         $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product->mainImage();
+                                        $mainImage = $product?->mainImage();
 
                                         if ($mainImage) {
                                             $translation = $mainImage->translations()->where('lang', $lang)->first();
