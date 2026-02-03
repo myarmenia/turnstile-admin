@@ -61,31 +61,4 @@ class ProductResource extends JsonResource
     }
 
 
-    private function getFileWithTranslations($file, string $lang): ?array
-    {
-        if (!$file) {
-            return null;
-        }
-
-        // Находим перевод для указанного языка
-        $translation = $file->translations->firstWhere('lang', $lang);
-
-        // Если перевод не найден, пробуем получить русский как fallback
-        if (!$translation && $lang !== 'ru') {
-            $translation = $file->translations->firstWhere('lang', 'ru');
-        }
-
-        // Если русский тоже не найден, берем первый доступный
-        if (!$translation && $file->translations->isNotEmpty()) {
-            $translation = $file->translations->first();
-        }
-
-        return [
-            'url' => asset('storage/' . $file->path),
-            'title' => $translation?->title ?? '',
-            'alt' => $translation?->alt ?? '',
-
-            'type' => $file->type
-        ];
-    }
 }
