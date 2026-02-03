@@ -82,20 +82,84 @@ class EditProduct extends EditRecord
          */
         $data = $this->form->getState();
 
-        if (!empty($data['main_image'])) {
-            $product->syncSingleFile($data['main_image'], 'main');
+        // if (!empty($data['main_image'])) {
+        //     // $product->syncSingleFile($data['main_image'], 'main');
+        //     $product->syncSingleFileWithSeo($this->filesData['main_image'][0], 'main');
+        // }
+
+        if (!empty($data['main_image'][0]['path'])) {
+
+            $file = $product->syncSingleFile(
+                $data['main_image'][0]['path'],
+                'main'
+            );
+
+            // сохраняем SEO переводы
+            if ($file && !empty($data['main_image'][0]['translations'])) {
+                foreach ($data['main_image'][0]['translations'] as $lang => $values) {
+                    $file->translations()->updateOrCreate(
+                        ['lang' => $lang],
+                        [
+                            'title' => $values['title'] ?? null,
+                            'alt'   => $values['alt'] ?? null,
+                        ]
+                    );
+                }
+            }
         }
 
+        // if (!empty($data['slider'])) {
+        //     $product->addFiles($data['slider'], 'slider');
+        // }
+
         if (!empty($data['slider'])) {
-            $product->addFiles($data['slider'], 'slider');
+            foreach ($data['slider'] as $item) {
+
+                // Добавляем файл slider (если новый)
+                $file = $this->record->addFile($item['path'], 'slider');
+
+                // Берём SEO, если пользователь изменил, иначе оставляем прежние
+                $translations = $item['translations'] ?? [];
+
+                foreach ($translations as $lang => $values) {
+                    $file->translations()->updateOrCreate(
+                        ['lang' => $lang],
+                        [
+                            'title' => $values['title'] ?? null,
+                            'alt'   => $values['alt']   ?? null,
+                        ]
+                    );
+                }
+            }
         }
 
         if (!empty($data['additional'])) {
             $product->addFiles($data['additional'], 'additional');
         }
 
+        // if (!empty($data['videos'])) {
+        //     $product->addFiles($data['videos'], 'video');
+        // }
+
         if (!empty($data['videos'])) {
-            $product->addFiles($data['videos'], 'video');
+            foreach ($data['videos'] as $item) {
+
+                // Добавляем файл videos (если новый)
+                $file = $this->record->addFile($item['path'], 'videos');
+
+                // Берём SEO, если пользователь изменил, иначе оставляем прежние
+                $translations = $item['translations'] ?? [];
+
+                foreach ($translations as $lang => $values) {
+                    $file->translations()->updateOrCreate(
+                        ['lang' => $lang],
+                        [
+                            'title' => $values['title'] ?? null,
+                            'alt'   => $values['alt']   ?? null,
+                        ]
+                    );
+                }
+            }
         }
 
         if (!empty($data['documents'])) {
