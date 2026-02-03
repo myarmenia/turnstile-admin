@@ -14,6 +14,17 @@ class File extends Model
         return $this->morphedByMany(Product::class, 'fileable');
     }
 
+    public function translations()
+    {
+        return $this->hasMany(FileTranslation::class);
+    }
+
+    public function translation($lang = null)
+    {
+        $lang = $lang ?: app()->getLocale();
+        return $this->translations()->where('lang', $lang)->first();
+    }
+
     public static function createFromPath(string $path, ?string $role = null): self
     {
         $disk = Storage::disk('public');

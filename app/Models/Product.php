@@ -33,6 +33,10 @@ class Product extends Model
     }
 
 
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
 
     public function getNameAttribute(): ?string
     {
