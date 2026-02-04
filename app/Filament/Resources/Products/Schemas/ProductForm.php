@@ -57,6 +57,8 @@ class ProductForm
                 //             return $supplier ? $supplier->user_name . ' - ' . $supplier->company_name : null;
                 //         }),
 
+                
+
                     Select::make('supplier_id')
                         ->label('Поставщик')
                         ->options(Supplier::query()->pluck('user_name', 'id'))
