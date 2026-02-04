@@ -16,7 +16,9 @@ class ProductResource extends JsonResource
     {
         $lang = request()->header('Accept-Language', 'ru') ?? 'hy';
         $translation = $this->current_translation ?? null;
-        $categorySlug = $this->category?->translation($lang)?->slug;
+        $category = $this->category?->translation($lang);
+
+        // $categorySlug = $this->category?->translation($lang)?->slug;
 
         return [
             'id' => $this->id,
@@ -25,7 +27,9 @@ class ProductResource extends JsonResource
             'name' => $translation?->name,
             'description' => $translation?->description,
             'specifications' => $translation?->specifications,
-            'category_slug' => $categorySlug,
+            'category_slug' => $category?->slug,
+            'category_name' => $category?->name,
+
             // ===== FILES =====
 
             'main_image' => $this->getMainImageForApi($lang),
