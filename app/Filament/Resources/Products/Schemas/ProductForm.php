@@ -57,7 +57,7 @@ class ProductForm
                 //             return $supplier ? $supplier->user_name . ' - ' . $supplier->company_name : null;
                 //         }),
 
-                
+
 
                     Select::make('supplier_id')
                         ->label('Поставщик')
@@ -227,7 +227,7 @@ class ProductForm
                                 FileUpload::make('path')
                                     ->image()
                                     ->acceptedFileTypes(['video/mp4', 'video/webm'])
-                                    ->directory(fn($record) => 'products/' . $record->id . '/slider')
+                                    ->directory(fn($record) => 'products/' . $record->id . '/videos')
                                     ->disk('public')
                                     ->maxSize(512_000) // 512MB
                                     ->rules(['max:524288']) // 512MB в KB для Laravel
