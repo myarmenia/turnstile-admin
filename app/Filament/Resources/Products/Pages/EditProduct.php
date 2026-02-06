@@ -145,7 +145,7 @@ class EditProduct extends EditRecord
             foreach ($data['videos'] as $item) {
 
                 // Добавляем файл videos (если новый)
-                $file = $this->record->addFile($item['path'], 'videos');
+                $file = $this->record->addFile($item['path'], 'video');
 
                 // Берём SEO, если пользователь изменил, иначе оставляем прежние
                 $translations = $item['translations'] ?? [];
