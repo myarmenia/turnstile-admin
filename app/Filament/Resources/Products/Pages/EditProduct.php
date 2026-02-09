@@ -133,9 +133,9 @@ class EditProduct extends EditRecord
             }
         }
 
-        if (!empty($data['additional'])) {
-            $product->addFiles($data['additional'], 'additional');
-        }
+        // if (!empty($data['additional'])) {
+        //     $product->addFiles($data['additional'], 'additional');
+        // }
 
         // if (!empty($data['videos'])) {
         //     $product->addFiles($data['videos'], 'video');

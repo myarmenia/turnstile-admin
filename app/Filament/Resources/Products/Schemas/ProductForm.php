@@ -48,17 +48,6 @@ class ProductForm
                         ->searchable()
                         ->required(),
 
-                //    Select::make('supplier_id')
-                //         ->label('Поставщик')
-                //         ->relationship('supplier', 'user_name') // предполагается foreign key supplier_id
-                //         ->searchable()
-                //         ->getOptionLabelUsing(function ($value) {
-                //             $supplier = Supplier::find($value);
-                //             return $supplier ? $supplier->user_name . ' - ' . $supplier->company_name : null;
-                //         }),
-
-
-
                     Select::make('supplier_id')
                         ->label('Поставщик')
                         ->options(Supplier::query()->pluck('user_name', 'id'))
@@ -67,7 +56,6 @@ class ProductForm
                             fn(Supplier $supplier) =>
                             $supplier->user_name . ' - 111' . $supplier->company_name
                         ),
-
 
                     TextInput::make('price')
                         ->label('Цена')
@@ -90,201 +78,150 @@ class ProductForm
                     Tabs::make('Files')
                         ->visible(fn($record) => $record)
                         ->tabs([
-                    // Tab::make('Главная картинка')->schema([
-                    //     FileUpload::make('main_image')
-                    //         ->image()
-                    //         // ->directory('products/main')
-                    //         ->directory(fn($record) => 'products/' . $record->id . '/main')
-                    //         ->disk('public'),
-                    //         // ->required(),
-                    // ]),
 
-                    Tab::make('Главная картинка')->schema([
-                        Repeater::make('main_image')
-                            ->label('Главная картинка')
-                            // ->relationship('files') // связь через fileables с role='main'
-                            ->defaultItems(1)
-                            ->schema(array_merge([
-                                FileUpload::make('path')
-                                    ->image()
-                                    ->directory(fn($record) => 'products/' . $record->id . '/main')
-                                    ->disk('public')
-                                    ->required(),
-                            ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
-                                $carry[] = TextInput::make("translations.{$lang}.title")
-                                    ->label("Title ({$locales[$lang]})")
-                                    ->maxLength(255);
-                                $carry[] = TextInput::make("translations.{$lang}.alt")
-                                    ->label("Alt ({$locales[$lang]})")
-                                    ->maxLength(255);
-                                return $carry;
-                            }, [])))
-                            ->columns(1)
-                            ->createItemButtonLabel('Добавить картинку')
-                    ]),
+                            Tab::make('Главная картинка')->schema([
+                                Repeater::make('main_image')
+                                    ->label('Главная картинка')
+                                    // ->relationship('files') // связь через fileables с role='main'
+                                    ->defaultItems(1)
+                                    ->schema(array_merge([
+                                        FileUpload::make('path')
+                                            ->image()
+                                            ->directory(fn($record) => 'products/' . $record->id . '/main')
+                                            ->disk('public')
+                                            ->required(),
+                                    ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
+                                        $carry[] = TextInput::make("translations.{$lang}.title")
+                                            ->label("Title ({$locales[$lang]})")
+                                            ->maxLength(255);
+                                        $carry[] = TextInput::make("translations.{$lang}.alt")
+                                            ->label("Alt ({$locales[$lang]})")
+                                            ->maxLength(255);
+                                        return $carry;
+                                    }, [])))
+                                    ->columns(1)
+                                    ->createItemButtonLabel('Добавить картинку')
+                            ]),
 
+                            // ===== Слайдер =====
+                            Tab::make('Слайдер')->schema([
+                                Repeater::make('slider')
+                                    ->label('Слайдер')
+                                    ->schema(array_merge([
+                                        FileUpload::make('path')
+                                            ->image()
+                                            ->directory(fn($record) => 'products/' . $record->id . '/slider')
+                                            ->disk('public')
+                                            ->required(),
+                                    ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
+                                        $carry[] = TextInput::make("translations.{$lang}.title")
+                                            ->label("Title ({$locales[$lang]})")
+                                            ->maxLength(255)
+                                            ->afterStateHydrated(function ($component, $state) use ($lang) {
+                                                $product = $component->getLivewire()->getRecord();
+                                                $mainImage = $product?->mainImage();
 
+                                                if ($mainImage) {
+                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
+                                                    if ($translation) {
+                                                        $component->state($translation->title); // для title
+                                                    }
+                                                }
+                                            });
 
+                                        $carry[] = TextInput::make("translations.{$lang}.alt")
+                                            ->label("Alt ({$locales[$lang]})")
+                                            ->maxLength(255)
+                                            ->afterStateHydrated(function ($component, $state) use ($lang) {
+                                                $product = $component->getLivewire()->getRecord();
+                                                $mainImage = $product?->mainImage();
 
-                    //////////////////////////////////////
-                    // ===== Слайдер =====
-                    Tab::make('Слайдер')->schema([
-                        Repeater::make('slider')
-                            ->label('Слайдер')
-                            ->schema(array_merge([
-                                FileUpload::make('path')
-                                    ->image()
-                                    ->directory(fn($record) => 'products/' . $record->id . '/slider')
-                                    ->disk('public')
-                                    ->required(),
-                            ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
-                                $carry[] = TextInput::make("translations.{$lang}.title")
-                                    ->label("Title ({$locales[$lang]})")
-                                    ->maxLength(255)
-                                    ->afterStateHydrated(function ($component, $state) use ($lang) {
-                                        $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product?->mainImage();
+                                                if ($mainImage) {
+                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
+                                                    if ($translation) {
+                                                        $component->state($translation->alt); // для alt
+                                                    }
+                                                }
+                                            });
 
-                                        if ($mainImage) {
-                                            $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                            if ($translation) {
-                                                $component->state($translation->title); // для title
-                                            }
-                                        }
-                                    });
+                                        return $carry;
+                                    }, [])))
+                                    ->columns(1)
+                                    ->createItemButtonLabel('Добавить картинку'),
+                            ]),
 
-                                $carry[] = TextInput::make("translations.{$lang}.alt")
-                                    ->label("Alt ({$locales[$lang]})")
-                                    ->maxLength(255)
-                                    ->afterStateHydrated(function ($component, $state) use ($lang) {
-                                        $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product?->mainImage();
-
-                                        if ($mainImage) {
-                                            $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                            if ($translation) {
-                                                $component->state($translation->alt); // для alt
-                                            }
-                                        }
-                                    });
-
-                                return $carry;
-                            }, [])))
-                            ->columns(1)
-                            ->createItemButtonLabel('Добавить картинку'),
-                    ]),
+                            // Tab::make('Доп. файлы')->schema([
+                            //     FileUpload::make('additional')
+                            //         ->multiple()
+                            //         ->directory(fn($record) => 'products/' . $record->id . '/additional')
+                            //         ->disk('public'),
+                            // ]),
 
 
+                            Tab::make('Видео')->schema([
+                                Repeater::make('videos')
+                                    ->label('Видео')
+                                    ->schema(array_merge([
+                                        FileUpload::make('path')
+                                        ->acceptedFileTypes([
+                                            'video/mp4',      // стандартный
+                                            'video/x-m4v',    // иногда windows/mp4
+                                            'video/mpeg',     // возможный fallback
+                                            'video/webm'
+                                        ])
+                                            ->directory(fn($record) => 'products/' . $record->id . '/videos')
+                                            ->disk('public')
+                                            ->maxSize(524288) // 512MB
+                                            ->required(),
+                                    ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
+                                        $carry[] = TextInput::make("translations.{$lang}.title")
+                                            ->label("Title ({$locales[$lang]})")
+                                            ->afterStateHydrated(function ($component, $state) use ($lang) {
+                                                $product = $component->getLivewire()->getRecord();
+                                                $mainImage = $product?->mainImage();
 
+                                                if ($mainImage) {
+                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
+                                                    if ($translation) {
+                                                        $component->state($translation->title); // для title
+                                                    }
+                                                }
+                                            });
 
-                    // Tab::make('Слайдер')->schema([
-                    //     Repeater::make('slider_files')
-                    //         ->label('Слайдер')
-                    //         ->schema(array_merge([
-                    //             FileUpload::make('slider')
-                    //                 ->image()
-                    //                 ->directory(fn($record) => 'products/' . $record->id . '/slider')
-                    //                 ->disk('public')
-                    //                 ->required(),
-                    //         ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
-                    //             $carry[] = TextInput::make("seo.{$lang}.title")
-                    //                 ->label("Title ({$locales[$lang]})")
-                    //                 ->maxLength(255);
-                    //             $carry[] = TextInput::make("seo.{$lang}.alt")
-                    //                 ->label("Alt ({$locales[$lang]})")
-                    //                 ->maxLength(255);
-                    //             return $carry;
-                    //         }, []))),
-                    // ]),
-                    // Tab::make('Слайдер')->schema([
-                    //         FileUpload::make('slider')
-                    //             ->multiple()
-                    //             ->image()
-                    //             ->directory(fn($record) => 'products/' . $record->id . '/slider')
-                    //             ->disk('public'),
-                    //     ]),
-                        Tab::make('Доп. файлы')->schema([
-                            FileUpload::make('additional')
-                                ->multiple()
-                                ->directory(fn($record) => 'products/' . $record->id . '/additional')
-                                ->disk('public'),
-                        ]),
-                        // Tab::make('Видео')->schema([
-                        //     FileUpload::make('videos')
-                        //         ->multiple()
-                        //         ->acceptedFileTypes(['video/mp4', 'video/webm'])
-                        //         ->directory(fn($record) => 'products/' . $record->id . '/videos')
-                        //         ->disk('public')
-                        //         ->maxSize(512_000) // 512MB
-                        //         ->rules(['max:524288']) // 512MB в KB для Laravel
-                        //         ->enableDownload(),
-                        // ]),
+                                        $carry[] = TextInput::make("translations.{$lang}.alt")
+                                            ->label("Alt ({$locales[$lang]})")
+                                            ->afterStateHydrated(function ($component, $state) use ($lang) {
+                                                $product = $component->getLivewire()->getRecord();
+                                                $mainImage = $product?->mainImage();
 
-                    Tab::make('Видео')->schema([
-                        Repeater::make('videos')
-                            ->label('Видео')
-                            ->schema(array_merge([
-                                FileUpload::make('path')
-                                    ->image()
-                                    ->acceptedFileTypes(['video/mp4', 'video/webm'])
-                                    ->directory(fn($record) => 'products/' . $record->id . '/videos')
-                                    ->disk('public')
-                                    ->maxSize(512_000) // 512MB
-                                    ->rules(['max:524288']) // 512MB в KB для Laravel
-                                    ->required(),
-                            ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
-                                $carry[] = TextInput::make("translations.{$lang}.title")
-                                    ->label("Title ({$locales[$lang]})")
-                                    ->maxLength(255)
-                                    ->afterStateHydrated(function ($component, $state) use ($lang) {
-                                        $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product?->mainImage();
+                                                if ($mainImage) {
+                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
+                                                    if ($translation) {
+                                                        $component->state($translation->alt); // для alt
+                                                    }
+                                                }
+                                            });
 
-                                        if ($mainImage) {
-                                            $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                            if ($translation) {
-                                                $component->state($translation->title); // для title
-                                            }
-                                        }
-                                    });
+                                        return $carry;
+                                    }, [])))
+                                    ->columns(1)
+                                    ->createItemButtonLabel('Добавить видео'),
+                            ]),
 
-                                $carry[] = TextInput::make("translations.{$lang}.alt")
-                                    ->label("Alt ({$locales[$lang]})")
-                                    ->maxLength(255)
-                                    ->afterStateHydrated(function ($component, $state) use ($lang) {
-                                        $product = $component->getLivewire()->getRecord();
-                                        $mainImage = $product?->mainImage();
+                            Tab::make('Документы')->schema([
 
-                                        if ($mainImage) {
-                                            $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                            if ($translation) {
-                                                $component->state($translation->alt); // для alt
-                                            }
-                                        }
-                                    });
-
-                                return $carry;
-                            }, [])))
-                            ->columns(1)
-                            ->createItemButtonLabel('Добавить картинку'),
-                    ]),
-
-                    Tab::make('Документы')->schema([
-                            FileUpload::make('documents')
-                                ->multiple()
-                                ->acceptedFileTypes([
-                                    'application/pdf',
-                                    'application/msword',
-                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                                ])
-                                ->directory(fn($record) => 'products/' . $record->id . '/documents')
-                                ->disk('public'),
-                        ]),
-                    ]),
-
-
-
-
+                                    FileUpload::make('documents')
+                                        ->label('Документы')
+                                        ->multiple()
+                                        ->acceptedFileTypes([
+                                            'application/pdf',
+                                            'application/msword',
+                                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                                        ])
+                                        ->directory(fn($record) => 'products/' . $record->id . '/documents')
+                                        ->disk('public'),
+                                ]),
+                            ]),
 
             ])
             ]);
