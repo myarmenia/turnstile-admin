@@ -42,7 +42,7 @@ class ProductResource extends Resource
         return [
             ProductMainImageRelationManager::class,
             ProductSliderRelationManager::class,
-            ProductAdditionalFilesRelationManager::class,
+            // ProductAdditionalFilesRelationManager::class,
             ProductVideoFilesRelationManager::class,
             ProductDocumentFilesRelationManager::class
         ];
