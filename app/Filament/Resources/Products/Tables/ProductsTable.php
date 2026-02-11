@@ -35,15 +35,20 @@ class ProductsTable
                     ->getStateUsing(fn($record) => $record->mainImage()?->path),
             ])
             ->filters(self::makeDynamicFilters([
+                'code' => [
+                    'label' => 'Код',
+                    'column' => 'code',
+                    'operator' => 'like',
+                ],
                 'name' => [
-                    'label' => 'Անվանում',
+                    'label' => 'Имя',
                     'relation' => 'translations',
                     'column' => 'name',
                     'operator' => 'like',
                 ],
                 'price' => [
                     'type' => 'range',
-                    'label' => 'Արժեք ',
+                    'label' => 'Цена ',
                     'column' => 'price'
                 ]
 
