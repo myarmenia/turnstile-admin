@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class BaseController
+abstract class BaseController
 {
     public function sendResponse($result = null, $message, $params = null): JsonResponse
     {
