@@ -13,9 +13,9 @@ class ProductController extends BaseController
 {
     public function __construct(protected ProductService $service) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->service->getActiveRows();
+        $products = $this->service->getFilteredProducts($request);
 
         return $this->sendResponse(
             ProductsResource::collection($products),

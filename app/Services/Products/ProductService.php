@@ -83,69 +83,23 @@ class ProductService extends BaseService
     }
 
 
-// ProductService.php
-    public function getFilteredProducts(array $filters = [], int $perPage = 9, ?string $category_slug = null)
+
+    public function getFilteredProducts($request, int $perPage = 9)
     {
 
+        $category_id = $request->category_id ?? null;
+        $product_code = $request->code ?? null;
+
         $query = $this->repository->queryActiveRows([
-            'category.translations',
-            'images',
-            'attributeValues.attribute'
+            'category.translations'
         ]);
 
-        // if (!empty($category_slug)) {
-        //     $query->whereHas('category.translations', function ($q) use ($category_slug) {
-        //         $q->where('slug', $category_slug);
-        //     });
-        // }
-
-        $categories = [];
-
-        // Сначала смотрим, есть ли выбранные категории из фильтра
-        if (!empty($filters['categories'])) {
-            $categories = $filters['categories'];
-        }
-        //Если фильтр пустой, но есть category_slug из route
-        elseif (!empty($category_slug)) {
-            $category = Category::whereHas('translations', function($q) use ($category_slug) {
-                $q->where('slug', $category_slug);
-            })->first();
-
-            if ($category) {
-                if ($category->parent_id === null) {
-                    // Главная категория: включаем всех детей + саму категорию
-                    $categories = array_merge([$category->id], $category->children()->pluck('id')->toArray());
-                } else {
-                    // Просто конкретная категория
-                    $categories = [$category->id];
-                }
-            }
+        if (!empty($category_id)) {
+            $query->where('category_id', $category_id);
         }
 
-        if (!empty($categories)) {
-            $query->whereIn('category_id', $categories);
-        }
-
-        // if (!empty($filters['attributes'])) {
-        //     $query->whereHas('attributeValues', function($q) use ($filters) {
-        //         $q->whereIn('attribute_value_id', $filters['attributes']);
-        //     });
-        // }
-
-        if (isset($filters['price_min']) && isset($filters['price_max'])) {
-            $min = $filters['price_min'];
-            $max =  $filters['price_max'];
-
-            $query->whereBetween('price', [$min, $max]);
-        }
-
-
-        if (!empty($filters['attributes'])) {
-            $attributeValueIds = $filters['attributes'];
-
-            $query->whereHas('attributeValues', function ($q) use ($attributeValueIds) {
-                $q->whereIn('attribute_values.id', $attributeValueIds);
-            }, '=', count($attributeValueIds));
+        if (!empty($product_code)) {
+            $query->where('code', $product_code);
         }
 
 
