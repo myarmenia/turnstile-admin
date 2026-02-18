@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('phone_number');
             $table->string('email');
-            $table->string('product_code');
+            $table->string('product_code')->nullable();
             $table->text('message')->nullable();
             $table->string('preferred_time')->nullable();
             $table->timestamps();
