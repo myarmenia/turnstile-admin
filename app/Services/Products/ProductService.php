@@ -103,7 +103,8 @@ class ProductService extends BaseService
         }
 
 
-        return $query->paginate($perPage);
+        // return $query->paginate($perPage);
+        return $query->get();
     }
 
 }

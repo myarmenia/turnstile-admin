@@ -24,10 +24,13 @@ class ProductsResource extends JsonResource
             "category_slug" => $this->category->translation($lang)->slug,
             "code" => $this->code,
 
-            'image' => $this->mainImage()
-                ? asset('storage/' . $this->mainImage()->path)
-                : null,
+            // 'image' => $this->mainImage()
+            //     ? asset('storage/' . $this->mainImage()->path)
+            //     : null,
 
+            'image' => $this->mainImage()
+                ? env('APP_FRONT_URL') . '/storage/' . $this->mainImage()->path
+                : null,
 
         ];
     }
