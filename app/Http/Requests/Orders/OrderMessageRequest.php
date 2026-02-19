@@ -5,6 +5,7 @@ namespace App\Http\Requests\Orders;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Http;
 
 class OrderMessageRequest extends FormRequest
 {
@@ -30,8 +31,34 @@ class OrderMessageRequest extends FormRequest
             'full_name' => 'required',
             'phone_number' => 'required',
             'email' => 'required',
-            'product_code' => 'required'
+            // 'product_code' => 'required',
+            'captcha' => 'required|string',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            if (!$this->captcha) {
+                return;
+            }
+
+            $response = Http::asForm()->post(
+                'https://www.google.com/recaptcha/api/siteverify',
+                [
+                    'secret'   => config('services.recaptcha.secret'),
+                    'response' => $this->captcha,
+                    'remoteip' => $this->ip(),
+                ]
+            );
+
+            $result = $response->json();
+
+            if (!($result['success'] ?? false)) {
+                $validator->errors()->add('captcha', __('captcha.invalid'));
+            }
+        });
     }
 
     protected function failedValidation(Validator $validator)

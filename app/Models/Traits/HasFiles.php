@@ -66,7 +66,9 @@ trait HasFiles
         $translation = $file->translation($lang);
 
         return [
-            'url' => asset('storage/' . $file->path),
+            // 'url' => asset('storage/' . $file->path),
+            'url' => env('APP_FRONT_URL') . '/storage/' . $file->path,
+
             'title' => $translation?->title ?? '',
             'alt' => $translation?->alt ?? '',
             'type' => $file->type
@@ -128,7 +130,7 @@ trait HasFiles
         }
     }
 
-    
+
 
     public function addFile(string $path, string $role): ?File
     {

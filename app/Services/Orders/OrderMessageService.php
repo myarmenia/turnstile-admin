@@ -20,6 +20,7 @@ class OrderMessageService extends BaseService
 
     public function storeAndSendEmail(array $data)
     {
+        unset($data['captcha']);
         $order = $this->store($data);
 
         try {

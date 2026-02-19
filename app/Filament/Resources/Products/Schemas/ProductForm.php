@@ -167,7 +167,8 @@ class ProductForm
                                             'video/mp4',      // стандартный
                                             'video/x-m4v',    // иногда windows/mp4
                                             'video/mpeg',     // возможный fallback
-                                            'video/webm'
+                                            'video/webm',
+                                            'video/quicktime'
                                         ])
                                             ->directory(fn($record) => 'products/' . $record->id . '/videos')
                                             ->disk('public')
