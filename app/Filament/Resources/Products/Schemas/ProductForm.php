@@ -241,9 +241,12 @@ class ProductForm
 
             // Textarea::make("translations.{$locale}.description")
             //     ->label('Описание'),
+
+            RichEditor::make("translations.{$locale}.short_description")
+                ->label('Краткое описание'),
+
             RichEditor::make("translations.{$locale}.description")
                 ->label('Описание'),
-
 
             RichEditor::make("translations.{$locale}.specifications")
                 ->label('Характеристика'),
