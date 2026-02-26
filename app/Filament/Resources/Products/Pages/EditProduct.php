@@ -25,6 +25,7 @@ class EditProduct extends EditRecord
                 'name'        => $translation->name ?? '',
                 'slug'        => $translation->slug ?? '',
                 'description' => $translation->description ?? '',
+                'short_description' => $translation->short_description ?? '',
                 'specifications' => $translation->specifications ?? '',
             ])
             ->toArray();
@@ -71,6 +72,7 @@ class EditProduct extends EditRecord
                     'name'        => $values['name'] ?? '',
                     'slug'        => $values['slug'] ?? '',
                     'description' => $values['description'] ?? '',
+                    'short_description' => $values['short_description'] ?? '',
                     'specifications' => $values['specifications'] ?? '',
 
                 ]
