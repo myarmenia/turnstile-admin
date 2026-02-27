@@ -9,7 +9,9 @@ services:
     env_file:
       - .env
     volumes:
-      - /var/www/turnstile-admin:/var/www
+       - /var/www/turnstile-admin/storage:/var/www/turnstile-admin/storage
+       - /var/www/turnstile-admin/public/storage:/var/www/turnstile-admin/public/storage
+       - /var/www/turnstile-admin/.env:/var/www/turnstile-admin/.env
     depends_on:
       - db
 
