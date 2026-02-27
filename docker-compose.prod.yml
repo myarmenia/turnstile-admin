@@ -9,7 +9,9 @@ services:
     env_file:
       - .env
     volumes:
-      - /var/www/turnstile-admin:/var/www/turnstile-admin
+      - /var/www/turnstile-admin:/var/www/turnstile-admin   # полный проект
+      - /var/www/turnstile-admin/storage:/var/www/turnstile-admin/storage   # чтобы файлы сохранялись
+      - /var/www/turnstile-admin/public/storage:/var/www/turnstile-admin/public/storage
     depends_on:
       - db
 
