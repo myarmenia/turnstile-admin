@@ -2,9 +2,14 @@
 
 set -e
 
-if [ ! -f /var/www/.env  ]; then
+# if [ ! -f /var/www/.env  ]; then
+#     echo "Creating .env file ..."
+#     cp -a .env.example .env
+# fi
+
+if [ ! -f /var/www/.env ] && [ -f /var/www/.env.example ]; then
     echo "Creating .env file ..."
-    cp -a .env.example .env
+    cp -a /var/www/.env.example /var/www/.env
 fi
 
 echo "Setting permissions for storage and bootstrap/cache directories..."
