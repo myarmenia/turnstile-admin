@@ -11,6 +11,8 @@ if [ ! -f /var/www/.env ] && [ -f /var/www/.env.example ]; then
     echo "Creating .env file ..."
     cp -a /var/www/.env.example /var/www/.env
 fi
+# Создаём папки, если их нет
+mkdir -p /var/www/storage /var/www/bootstrap/cache /var/www/storage/logs
 
 echo "Setting permissions for storage and bootstrap/cache directories..."
 chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
