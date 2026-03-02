@@ -16,7 +16,7 @@ class ProductsResource extends JsonResource
     {
         $lang = request()->header('Accept-Language', 'ru') ?? 'hy';
         $translation = $this->translation($lang) ?? null;
-dd($this->mainImage());
+
         return [
             "id" => $this->id,
             "slug" => $translation->slug,
