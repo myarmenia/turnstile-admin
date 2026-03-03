@@ -23,6 +23,11 @@ class CategoryService extends BaseService
         return $this->repository->getChildrenBySlug($slug);
     }
 
+    public function getCategoriesHasProducts()
+    {
+        return $this->repository->getActiveCategoriesWithProducts();
+    }
+
 
 
 
