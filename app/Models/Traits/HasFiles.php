@@ -56,6 +56,25 @@ trait HasFiles
     }
 
 
+    // public function formatFileForApi(?File $file, string $lang = null): ?array
+    // {
+    //     if (!$file) {
+    //         return null;
+    //     }
+
+    //     $lang = $lang ?? request()->header('Accept-Language', 'ru');
+    //     $translation = $file->translation($lang);
+
+    //     return [
+    //         // 'url' => asset('storage/' . $file->path),
+    //         'url' => env('APP_FRONT_URL') . '/storage/' . $file->path,
+
+    //         'title' => $translation?->title ?? '',
+    //         'alt' => $translation?->alt ?? '',
+    //         'type' => $file->type
+    //     ];
+    // }
+
     public function formatFileForApi(?File $file, string $lang = null): ?array
     {
         if (!$file) {
@@ -65,13 +84,15 @@ trait HasFiles
         $lang = $lang ?? request()->header('Accept-Language', 'ru');
         $translation = $file->translation($lang);
 
-        return [
-            // 'url' => asset('storage/' . $file->path),
-            'url' => env('APP_FRONT_URL') . '/storage/' . $file->path,
+        $url = $file->url
+            ? $file->url
+            : env('APP_FRONT_URL') . '/storage/' . $file->path;
 
+        return [
+            'url'   => $url,
             'title' => $translation?->title ?? '',
-            'alt' => $translation?->alt ?? '',
-            'type' => $file->type
+            'alt'   => $translation?->alt ?? '',
+            'type'  => $file->type,
         ];
     }
 
@@ -148,6 +169,29 @@ trait HasFiles
         return $file;
     }
 
+    public function addExternalFile(string $url, string $role): ?File
+    {
+        if (!$url) {
+            return null;
+        }
+
+        // Определяем тип файла
+        $type = str_contains($url, 'youtube.com') || str_contains($url, 'youtu.be')
+            ? 'youtube'
+            : 'video'; // если какой-то другой внешний файл, считаем просто видео
+
+        $file = File::create([
+            'path' => null,
+            'url'  => $url,
+            'type' => $type,
+        ]);
+
+        $this->files()->attach($file->id, [
+            'role' => $role,
+        ]);
+
+        return $file;
+    }
 
 
     public function syncSingleFile(?string $path, string $role): ?File
