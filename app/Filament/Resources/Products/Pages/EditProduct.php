@@ -146,8 +146,23 @@ class EditProduct extends EditRecord
         if (!empty($data['videos'])) {
             foreach ($data['videos'] as $item) {
 
-                // Добавляем файл videos (если новый)
-                $file = $this->record->addFile($item['path'], 'video');
+                $path = $item['path'] ?? null;
+                $url  = $item['url']  ?? null;
+
+                // Если ничего нет — пропускаем
+                if (!$path && !$url) {
+                    continue;
+                }
+
+                // Если это локальный файл
+                if ($path) {
+                    $file = $this->record->addFile($path, 'video');
+                }
+
+                // Если это YouTube
+                elseif ($url) {
+                    $file = $this->record->addExternalFile($url, 'video');
+                }
 
                 // Берём SEO, если пользователь изменил, иначе оставляем прежние
                 $translations = $item['translations'] ?? [];
