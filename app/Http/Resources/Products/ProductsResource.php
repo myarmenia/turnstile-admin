@@ -23,7 +23,7 @@ class ProductsResource extends JsonResource
             "category_id" => $this->category_id,
             "category_slug" => $this->category->translation($lang)->slug,
             "code" => $this->code,
-
+            "name" => $translation?->name,
             // 'image' => $this->mainImage()
             //     ? asset('storage/' . $this->mainImage()->path)
             //     : null,

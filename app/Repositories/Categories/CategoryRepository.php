@@ -34,5 +34,12 @@ class CategoryRepository extends BaseRepository implements CategoryInterface
     }
 
 
+    public function getActiveCategoriesWithProducts(array $with = []): mixed
+    {
+        return $this->queryActiveRows($with)
+            ->whereHas('products')
+            ->get();
+    }
+
 
 }
