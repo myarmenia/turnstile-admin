@@ -12,7 +12,7 @@ class CategoryController extends BaseController
 
     public function index()
     {
-        $categories = $this->service->getActiveRows();
+        $categories = $this->service->getCategoriesHasProducts();
 
         return $this->sendResponse(
             CategoriesResource::collection($categories),

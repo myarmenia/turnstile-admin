@@ -158,53 +158,149 @@ class ProductForm
                             // ]),
 
 
+                            // Tab::make('Видео')->schema([
+                            //     Repeater::make('videos')
+                            //         ->label('Видео')
+                            //         ->schema(array_merge([
+                            //             FileUpload::make('path')
+                            //             ->acceptedFileTypes([
+                            //                 'video/mp4',      // стандартный
+                            //                 'video/x-m4v',    // иногда windows/mp4
+                            //                 'video/mpeg',     // возможный fallback
+                            //                 'video/webm',
+                            //                 'video/quicktime'
+                            //             ])
+                            //                 ->directory(fn($record) => 'products/' . $record->id . '/videos')
+                            //                 ->disk('public')
+                            //                 ->maxSize(524288) // 512MB
+                            //                 ->required(),
+                            //         ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
+                            //             $carry[] = TextInput::make("translations.{$lang}.title")
+                            //                 ->label("Title ({$locales[$lang]})")
+                            //                 ->afterStateHydrated(function ($component, $state) use ($lang) {
+                            //                     $product = $component->getLivewire()->getRecord();
+                            //                     $mainImage = $product?->mainImage();
+
+                            //                     if ($mainImage) {
+                            //                         $translation = $mainImage->translations()->where('lang', $lang)->first();
+                            //                         if ($translation) {
+                            //                             $component->state($translation->title); // для title
+                            //                         }
+                            //                     }
+                            //                 });
+
+                            //             $carry[] = TextInput::make("translations.{$lang}.alt")
+                            //                 ->label("Alt ({$locales[$lang]})")
+                            //                 ->afterStateHydrated(function ($component, $state) use ($lang) {
+                            //                     $product = $component->getLivewire()->getRecord();
+                            //                     $mainImage = $product?->mainImage();
+
+                            //                     if ($mainImage) {
+                            //                         $translation = $mainImage->translations()->where('lang', $lang)->first();
+                            //                         if ($translation) {
+                            //                             $component->state($translation->alt); // для alt
+                            //                         }
+                            //                     }
+                            //                 });
+
+                            //             return $carry;
+                            //         }, [])))
+                            //         ->columns(1)
+                            //         ->createItemButtonLabel('Добавить видео'),
+                            // ]),
+
                             Tab::make('Видео')->schema([
                                 Repeater::make('videos')
                                     ->label('Видео')
-                                    ->schema(array_merge([
+                                    ->schema([
+
+                                        Select::make('type')
+                                            ->label('Тип видео')
+                                            ->options([
+                                                'file' => 'Файл',
+                                                'youtube' => 'YouTube ссылка',
+                                            ])
+                                            ->default('file')
+                                            ->live()
+                                            ->required(),
+
+                                        // ===== Локальный файл =====
                                         FileUpload::make('path')
-                                        ->acceptedFileTypes([
-                                            'video/mp4',      // стандартный
-                                            'video/x-m4v',    // иногда windows/mp4
-                                            'video/mpeg',     // возможный fallback
-                                            'video/webm',
-                                            'video/quicktime'
-                                        ])
+                                            ->label('Видео файл')
+                                            ->acceptedFileTypes([
+                                                'video/mp4',
+                                                'video/x-m4v',
+                                                'video/mpeg',
+                                                'video/webm',
+                                                'video/quicktime',
+                                            ])
                                             ->directory(fn($record) => 'products/' . $record->id . '/videos')
                                             ->disk('public')
-                                            ->maxSize(524288) // 512MB
-                                            ->required(),
-                                    ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
+                                            ->maxSize(524288)
+                                            ->visible(fn($get) => $get('type') === 'file')
+                                            ->required(fn($get) => $get('type') === 'file'),
+
+                                        // ===== YouTube URL =====
+                                        TextInput::make('url')
+                                            ->label('YouTube ссылка')
+                                            ->placeholder('https://www.youtube.com/watch?v=...')
+                                            ->url()
+                                            ->visible(fn($get) => $get('type') === 'youtube')
+                                            ->required(fn($get) => $get('type') === 'youtube'),
+
+                                    // ===== Переводы =====
+                                    ...array_reduce(array_keys(self::SUPPORTED_LOCALES), function ($carry, $lang) {
+                                        $label = self::SUPPORTED_LOCALES[$lang];
+
                                         $carry[] = TextInput::make("translations.{$lang}.title")
-                                            ->label("Title ({$locales[$lang]})")
+                                            ->label("Title ({$label})")
                                             ->afterStateHydrated(function ($component, $state) use ($lang) {
+
+                                                // если уже есть значение — не перезаписываем
+                                                if (!empty($state)) {
+                                                    return;
+                                                }
+
                                                 $product = $component->getLivewire()->getRecord();
                                                 $mainImage = $product?->mainImage();
 
                                                 if ($mainImage) {
-                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                                    if ($translation) {
-                                                        $component->state($translation->title); // для title
+                                                    $translation = $mainImage->translations()
+                                                        ->where('lang', $lang)
+                                                        ->first();
+
+                                                    if ($translation?->title) {
+                                                        $component->state($translation->title);
                                                     }
                                                 }
                                             });
 
                                         $carry[] = TextInput::make("translations.{$lang}.alt")
-                                            ->label("Alt ({$locales[$lang]})")
+                                            ->label("Alt ({$label})")
                                             ->afterStateHydrated(function ($component, $state) use ($lang) {
+
+                                                if (!empty($state)) {
+                                                    return;
+                                                }
+
                                                 $product = $component->getLivewire()->getRecord();
                                                 $mainImage = $product?->mainImage();
 
                                                 if ($mainImage) {
-                                                    $translation = $mainImage->translations()->where('lang', $lang)->first();
-                                                    if ($translation) {
-                                                        $component->state($translation->alt); // для alt
+                                                    $translation = $mainImage->translations()
+                                                        ->where('lang', $lang)
+                                                        ->first();
+
+                                                    if ($translation?->alt) {
+                                                        $component->state($translation->alt);
                                                     }
                                                 }
                                             });
 
                                         return $carry;
-                                    }, [])))
+                                    }, [])
+
+                                    ])
                                     ->columns(1)
                                     ->createItemButtonLabel('Добавить видео'),
                             ]),
@@ -224,7 +320,7 @@ class ProductForm
                                 ]),
                             ]),
 
-            ])
+                    ])
             ]);
     }
 
