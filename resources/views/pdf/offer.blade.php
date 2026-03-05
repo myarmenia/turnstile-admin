@@ -74,7 +74,7 @@
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 20px;
             font-size: 14px;
         }
 
@@ -115,42 +115,32 @@
             @endphp
 
             <tr>
-
                 <td>
                     {{ $product->code }}
                 </td>
-
                 <td>
                     {{ $translation?->name }}
                 </td>
-
                 <td class="qty">
                     {{ $qty }}
                 </td>
-
                 <td class="price">
                     {{ number_format($price, 0, '.', ' ') }}
                 </td>
-
                 <td class="price">
                     {{ number_format($sum, 0, '.', ' ') }}
                 </td>
-
             </tr>
         @endforeach
 
         <tr class="total-row">
-
             <td colspan="4" class="price">
                 Ընդհանուր
             </td>
-
             <td class="price">
                 {{ number_format($total, 0, '.', ' ') }}
             </td>
-
         </tr>
-
     </table>
 
 
@@ -170,10 +160,7 @@
 
             @if ($product->mainImage())
                 <div class="product-image">
-                    {{-- env('APP_URL')-<img src="{{ env('APP_URL') . '/storage/' . $product->mainImage()->path }}"> --}}
                     <img src="{{ storage_path('app/public/'.$product->mainImage()->path)}}">
-                    {{-- public_path-<img src="{{ public_path('storage/'.$product->mainImage()->path)}}">
-                    file://-<img src="file://{{ public_path('storage/'.$product->mainImage()->path) }}"> --}}
                 </div>
             @endif
 
@@ -185,19 +172,15 @@
 
 
     <div class="footer">
-
         <p>
             <span class="label">Առաքման ժամկետ.</span>
             {{ $delivery_time }}
         </p>
-
         <p>
             <span class="label">Առաջարկը վավեր է.</span>
             {{ $valid_until }}
         </p>
-
     </div>
 
 </body>
-
 </html>
