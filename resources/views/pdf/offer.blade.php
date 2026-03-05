@@ -170,10 +170,10 @@
 
             @if ($product->mainImage())
                 <div class="product-image">
-                    env('APP_URL')-<img src="{{ env('APP_URL') . '/storage/' . $product->mainImage()->path }}">
-                    storage_path-<img src="{{ storage_path('app/public/'.$product->mainImage()->path)}}">
-                    public_path-<img src="{{ public_path('storage/'.$product->mainImage()->path)}}">
-                    file://-<img src="file://{{ public_path('storage/'.$product->mainImage()->path) }}">
+                    {{-- env('APP_URL')-<img src="{{ env('APP_URL') . '/storage/' . $product->mainImage()->path }}"> --}}
+                    <img src="{{ storage_path('app/public/'.$product->mainImage()->path)}}">
+                    {{-- public_path-<img src="{{ public_path('storage/'.$product->mainImage()->path)}}">
+                    file://-<img src="file://{{ public_path('storage/'.$product->mainImage()->path) }}"> --}}
                 </div>
             @endif
 
