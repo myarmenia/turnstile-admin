@@ -82,28 +82,6 @@
         </div>
     @endif
 
-    {{-- <div class="info">
-        <span class="label">{{ $t['code'] }}:</span>
-        {{ $product->code }}
-    </div>
-
-    <div class="info">
-        <span class="label">{{ $t['price'] }}:</span>
-        {{ $product->price }}
-    </div>
-
-    @if($product->category)
-        <div class="info">
-            <span class="label">{{ $t['category'] }}:</span>
-            {{ $product->category->translation($locale)?->name ?? '-' }}
-        </div>
-    @endif --}}
-
-    {{-- <div class="description">
-        <span class="label">{{ $t['description'] }}:</span><br><br>
-        {!! $translation?->description ?? '—' !!}
-    </div> --}}
-
     <div class="specifications">
         <span class="label">{{ $t['specifications'] }}:</span>
         {!! $translation?->specifications ?? '—' !!}
