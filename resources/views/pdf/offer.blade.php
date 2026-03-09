@@ -15,7 +15,7 @@
 }
 
 body{
-    padding:120px 10px 220px 10px;
+    padding:120px 10px 210px 10px;
     font-size:14px;
     color:#333;
 }
