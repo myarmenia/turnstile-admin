@@ -15,7 +15,7 @@
 }
 
 body{
-    padding:120px 10px 160px 10px;
+    padding:120px 10px 190px 10px;
     font-size:14px;
     color:#333;
 }
@@ -203,180 +203,144 @@ td{
 
 
 <body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-wrapper">
 
-
-<!-- HEADER -->
-
-<header>
-
-<div class="header-wrapper">
-
-<div class="header-left">
-    <img src="{{ public_path('/images/logo.png') }}" class="logo">
-    <span class="site-name">turniket.am</span>
-</div>
-
-<div class="header-right">
-    <span><img src="{{ public_path('/images/icons/phone.png') }}" class="icon-hd"> +374 96 10 10 17</span>
-    <span><img src="{{ public_path('/images/icons/phone.png') }}" class="icon-hd"> +374 96 40 00 73</span>
-    <span><img src="{{ public_path('/images/icons/email.png') }}" class="icon-hd"> info@webex.am</span>
-</div>
-
-</header>
-
-
-
-<!-- FOOTER -->
-
-<footer>
-<table class="footer-table">
-    <tr>
-        <!-- Левый блок: логотип + основной текст -->
-        <td class="footer-left">
-            <img src="{{ public_path('/images/logo.png') }}" class="logo">
-            <p>Մասնագիտական լուծումներ մուտքի վերահսկման և անվտանգության համար</p>
-        </td>
-
-        <!-- Средний блок: контакты -->
-        <td class="footer-center">
-            <div class="footer-title">Կոնտակտային տվյալներ</div>
-            <div class="footer-text">
-                <img src="{{ public_path('/images/icons/phone.png') }}" class="icon"> +374 96 10 10 17<br>
-                <img src="{{ public_path('/images/icons/phone.png') }}" class="icon"> +374 96 40 00 73<br>
-                <img src="{{ public_path('/images/icons/email.png') }}" class="icon"> info@webex.am
+            <div class="header-left">
+                <img src="{{ public_path('/images/logo.png') }}" class="logo">
+                <span class="site-name">turniket.am</span>
             </div>
-        </td>
-
-        <!-- Правый блок: адрес -->
-        <td class="footer-right">
-            <div class="footer-title">Հասցե</div>
-            <div class="footer-text">
-                <img src="{{ public_path('/images/icons/mappin.png') }}" class="icon"> Ք․ Երևան, Բաղրամյան 79 1/1
+            <div class="header-right">
+                <span><img src="{{ public_path('/images/icons/phone.png') }}" class="icon-hd"> +374 96 10 10 17</span>
+                <span><img src="{{ public_path('/images/icons/phone.png') }}" class="icon-hd"> +374 96 40 00 73</span>
+                <span><img src="{{ public_path('/images/icons/email.png') }}" class="icon-hd"> info@webex.am</span>
             </div>
-        </td>
-    </tr>
+        </div>
+    </header>
+    <!-- FOOTER -->
 
-    <!-- Вторая строка: копирайт -->
-    <tr style="border-top: 1px solid #E5E7EB;  margin: 0px">
-    <td colspan="3" style="padding:0;">
-        <table style="width:100%; border-collapse: collapse; margin: 0px; padding:0;">
+    <footer>
+        <table class="footer-table">
             <tr>
-                <td style="text-align:left; font-size:12px;">
-                    © 2026 Turniket. Բոլոր իրավունքները պաշտպանված են։
+                <!-- Левый блок: логотип + основной текст -->
+                <td class="footer-left">
+                    <img src="{{ public_path('/images/logo.png') }}" class="logo">
+                    <p>Մասնագիտական լուծումներ մուտքի վերահսկման և անվտանգության համար</p>
                 </td>
-                <td style="text-align:right; font-size:12px" class="site-name-footer">
-                    turniket.am
+                <!-- Средний блок: контакты -->
+                <td class="footer-center">
+                    <div class="footer-title">Կոնտակտային տվյալներ</div>
+                    <div class="footer-text">
+                        <img src="{{ public_path('/images/icons/phone.png') }}" class="icon"> +374 96 10 10 17<br>
+                        <img src="{{ public_path('/images/icons/phone.png') }}" class="icon"> +374 96 40 00 73<br>
+                        <img src="{{ public_path('/images/icons/email.png') }}" class="icon"> info@webex.am
+                    </div>
+                </td>
+                <!-- Правый блок: адрес -->
+                <td class="footer-right">
+                    <div class="footer-title">Հասցե</div>
+                    <div class="footer-text">
+                        <img src="{{ public_path('/images/icons/mappin.png') }}" class="icon"> Ք․ Երևան, Բաղրամյան 79 1/1
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Вторая строка: копирайт -->
+            <tr style="border-top: 1px solid #E5E7EB;  margin: 0px">
+                <td colspan="3" style="padding:0;">
+                    <table style="width:100%; border-collapse: collapse; margin: 0px; padding:0;">
+                        <tr>
+                            <td style="text-align:left; font-size:12px;">
+                                © 2026 Turniket. Բոլոր իրավունքները պաշտպանված են։
+                            </td>
+                            <td style="text-align:right; font-size:12px" class="site-name-footer">
+                                turniket.am
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
-    </td>
-</tr>
+    </footer>
+
+    <h1>Առաջարկ</h1>
+
+    @php $total = 0 @endphp
+
+    <table>
+
+        <tr>
+            <th width="10%">Կոդ</th>
+            <th width="15%">Նկար</th>
+            <th width="35%">Անվանում</th>
+            <th width="10%">Քանակ</th>
+            <th width="15%">Գին</th>
+            <th width="15%">Գումար</th>
+        </tr>
 
 
-</table>
-</footer>
+        @foreach ($items as $item)
+            @php
+                $product = $products->firstWhere('id',$item['product_id']);
+                $translation = $product?->translation('hy');
+
+                $price = $product->price ?? 0;
+                $qty = $item['quantity'] ?? 0;
+                $sum = $price * $qty;
+
+                $total += $sum;
+            @endphp
+
+            <tr>
+                <td>
+                    {{ $product->code }}
+                </td>
+                <td class="product-image">
+
+                    @if ($product->mainImage())
+                        <img src="{{ storage_path('app/public/'.$product->mainImage()->path) }}">
+                    @endif
+                </td>
+                <td>
+                    {{ $translation?->name }}
+                </td>
+                <td class="qty">
+                    {{ $qty }}
+                </td>
+                <td class="price">
+                    {{ number_format($price,0,'.',' ') }}
+                </td>
+                <td class="price">
+                    {{ number_format($sum,0,'.',' ') }}
+                </td>
+            </tr>
+
+        @endforeach
 
 
+        <tr class="total-row">
+            <td colspan="5" class="price">
+                Ընդհանուր
+            </td>
+            <td class="price">
+                {{ number_format($total,0,'.',' ') }}
+            </td>
+        </tr>
 
-<h1>Առաջարկ</h1>
-
-
-@php $total = 0 @endphp
-
-
-<table>
-
-<tr>
-<th width="10%">Կոդ</th>
-<th width="15%">Նկար</th>
-<th width="35%">Անվանում</th>
-<th width="10%">Քանակ</th>
-<th width="15%">Գին</th>
-<th width="15%">Գումար</th>
-</tr>
+    </table>
 
 
-@foreach ($items as $item)
+    <div class="body-top" >
+        <p>
+            <b>Առաքման ժամկետ.</b>
+            {{ $delivery_time }}
+        </p>
 
-@php
-
-$product = $products->firstWhere('id',$item['product_id']);
-$translation = $product?->translation('hy');
-
-$price = $product->price ?? 0;
-$qty = $item['quantity'] ?? 0;
-$sum = $price * $qty;
-
-$total += $sum;
-
-@endphp
-
-
-<tr>
-
-<td>
-{{ $product->code }}
-</td>
-
-<td class="product-image">
-
-@if ($product->mainImage())
-<img src="{{ storage_path('app/public/'.$product->mainImage()->path) }}">
-@endif
-
-</td>
-
-<td>
-{{ $translation?->name }}
-</td>
-
-<td class="qty">
-{{ $qty }}
-</td>
-
-<td class="price">
-{{ number_format($price,0,'.',' ') }}
-</td>
-
-<td class="price">
-{{ number_format($sum,0,'.',' ') }}
-</td>
-
-</tr>
-
-@endforeach
-
-
-<tr class="total-row">
-
-<td colspan="5" class="price">
-Ընդհանուր
-</td>
-
-<td class="price">
-{{ number_format($total,0,'.',' ') }}
-</td>
-
-</tr>
-
-</table>
-
-
-
-<div class="body-top" >
-
-<p>
-<b>Առաքման ժամկետ.</b>
-{{ $delivery_time }}
-</p>
-
-<p>
-<b>Առաջարկը վավեր է.</b>
-{{ $valid_until }}
-</p>
-
-</div>
-
-
+        <p>
+            <b>Առաջարկը վավեր է.</b>
+            {{ $valid_until }}
+        </p>
+    </div>
 </body>
 </html>
