@@ -78,7 +78,8 @@
 
     @if($product->mainImage())
         <div class="image">
-            <img src="{{ public_path('storage/'.$product->mainImage()->path) }}" width="250">
+            {{-- <img src="{{ public_path('storage/'.$product->mainImage()->path) }}" width="250"> --}}
+            <img src="{{ storage_path('app/public/'.$product->mainImage()->path) }}" width="250">
         </div>
     @endif
 
