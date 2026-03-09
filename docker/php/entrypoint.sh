@@ -24,10 +24,19 @@ if [ ! -f /var/www/storage/logs/laravel.log ]; then
     chmod a+rwx /var/www/storage/logs/laravel.log
 fi
 
+# if [ ! -d /var/www/vendor ] || [ ! -f /var/www/composer.lock ]; then
+#     echo "Installing composer packages..."
+#     exec composer install --optimize-autoloader --no-interaction --no-progress
+# fi
+
 if [ ! -d /var/www/vendor ] || [ ! -f /var/www/composer.lock ]; then
     echo "Installing composer packages..."
-    exec composer install --optimize-autoloader --no-interaction --no-progress
+    composer install --optimize-autoloader --no-interaction --no-progress
 fi
 
+
+# ЗАПУСКАЕМ SUPERVISOR В ФОНЕ
+echo "Starting Supervisor..."
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
 exec "$@"

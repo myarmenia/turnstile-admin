@@ -37,5 +37,9 @@ return [
     'recaptcha' => [
         'secret' => env('RECAPTCHA_SECRET_KEY'),
     ],
+    'nextjs' => [
+        'url' => env('APP_FRONT_URL', 'https://turniket.am'),
+        'revalidate_token' => env('NEXTJS_REVALIDATE_TOKEN'),
+    ],
 
 ];
