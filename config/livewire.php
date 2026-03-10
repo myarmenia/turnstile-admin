@@ -124,7 +124,7 @@ return [
     */
 
     'temporary_file_upload' => [
-        'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK'), // Example: 'local', 's3'             | Default: 'default'
+        'disk' => 'public', // Example: 'local', 's3'             | Default: 'default'
         // 'rules' => null,                                      // Example: ['file', 'mimes:png,jpg'] | Default: ['required', 'file', 'max:12288'] (12MB)
         'rules' => ['required', 'file', 'max:122880'],
         'directory' => null,                                  // Example: 'tmp'                     | Default: 'livewire-tmp'
@@ -134,7 +134,7 @@ return [
             'mov', 'avi', 'wmv', 'mp3', 'm4a',
             'jpg', 'jpeg', 'mpga', 'webp', 'wma',
         ],
-        'max_upload_time' => 20, // Max duration (in minutes) before an upload is invalidated...
+        'max_upload_time' => 600, // Max duration (in minutes) before an upload is invalidated...
         'cleanup' => true, // Should cleanup temporary uploads older than 24 hrs...
     ],
 
