@@ -9,15 +9,15 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Schedule::job(new RefreshSitemap())
-//     ->dailyAt('03:00')
-//     ->withoutOverlapping()
-//     ->name('sitemap-refresh')
-//     ->description('Обновление sitemap каждый день в 3 часа ночи');
-
-
 Schedule::job(new RefreshSitemap())
-    ->everyMinute()              // теперь каждая минута
+    ->dailyAt('03:00')
     ->withoutOverlapping()
     ->name('sitemap-refresh')
-    ->description('Обновление sitemap каждую минуту для теста');
+    ->description('Обновление sitemap каждый день в 3 часа ночи');
+
+
+// Schedule::job(new RefreshSitemap())
+//     ->everyMinute()              // теперь каждая минута
+//     ->withoutOverlapping()
+//     ->name('sitemap-refresh')
+//     ->description('Обновление sitemap каждую минуту для теста');
