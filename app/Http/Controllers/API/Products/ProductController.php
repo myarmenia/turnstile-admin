@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Products\ProductResource;
 use App\Http\Resources\Products\ProductsResource;
+use App\Http\Resources\Products\ProductsSitemapResource;
 use App\Services\Products\ProductService;
 use Illuminate\Http\Request;
 
@@ -50,5 +51,17 @@ class ProductController extends BaseController
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), [], $e->getCode() ?: 400);
         }
+    }
+
+
+
+    public function productsSitemap(){
+
+        $products = $this->service->getProductsSitemap();
+
+        return $this->sendResponse(
+            ProductsSitemapResource::collection($products),
+                'Products retrieved successfully'
+            );
     }
 }

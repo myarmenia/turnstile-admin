@@ -107,4 +107,14 @@ class ProductService extends BaseService
         return $query->get();
     }
 
+    
+    public function getProductsSitemap()
+    {
+        $query = $this->repository->queryActiveRows([
+            'category.translations'
+        ]);
+
+        return $query->get();
+    }
+
 }

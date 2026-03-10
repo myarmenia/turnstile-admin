@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filament\Traits\DynamicFilterTrait;
+use App\Jobs\RefreshSitemap;
 use App\Models\Traits\HasFiles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +50,25 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('active', 1);
+    }
+
+    protected static function booted()
+    {
+
+        static::created(function ($product) {
+            RefreshSitemap::dispatch('product_created');
+        });
+
+        static::updated(function ($product) {
+            // Можно проверять, изменились ли важные поля
+            if ($product->wasChanged(['code'])) {
+                RefreshSitemap::dispatch('product_updated');
+            }
+        });
+
+        static::deleted(function ($product) {
+            RefreshSitemap::dispatch('product_deleted');
+        });
     }
 
 }

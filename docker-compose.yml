@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: turnstile_app
+    restart: unless-stopped
     env_file:
       - .env
     volumes:
