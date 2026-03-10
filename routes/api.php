@@ -17,4 +17,8 @@ Route::middleware(['api.key', 'throttle:60,1'])->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::post('/order-email', [OrderMessageController::class, 'index']);
+
+    Route::get('/products-sitemap', [ProductController::class, 'productsSitemap']);
+
+
 });

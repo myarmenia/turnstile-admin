@@ -4,12 +4,14 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: turnstile_app
+    restart: unless-stopped
     ports:
       - "9000:9000"
     env_file:
       - .env
     volumes:
        - /var/www/turnstile-admin:/var/www
+       - /var/www/turnstile-admin/storage/logs:/var/www/storage/logs
     depends_on:
       - db
 
