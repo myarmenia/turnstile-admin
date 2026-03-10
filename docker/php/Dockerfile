@@ -2,6 +2,7 @@ FROM php:8.2-fpm
 
 # Системные зависимости + PHP extensions
 RUN apt-get update && apt-get install -y \
+    procps \
     git \
     curl \
     zip \
@@ -39,9 +40,13 @@ WORKDIR /var/www
 # Настраиваем PHP-FPM на слушание всех интерфейсов
 RUN sed -i 's/listen = 127\.0\.0\.1:9000/listen = 0.0.0.0:9000/' /usr/local/etc/php-fpm.d/www.conf
 
+# Папки для supervisor
+RUN mkdir -p /var/log/supervisor /var/run
+
 # КОПИРУЕМ КОНФИГУРАЦИЮ SUPERVISOR
 COPY docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
-COPY docker/supervisor/conf.d/laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+# COPY docker/supervisor/conf.d/laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+COPY docker/supervisor/conf.d/ /etc/supervisor/conf.d/
 
 # Entrypoint
 COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
