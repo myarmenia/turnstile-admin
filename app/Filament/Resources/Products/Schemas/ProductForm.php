@@ -37,16 +37,23 @@ class ProductForm
                         ->label('Код товара')
                         ->required(),
 
-                    Select::make('category_id')
-                        ->label('Категория')
-                        ->options(function (CategoryService $service) {
-                            $categories = $service->getActiveRows(['translations', 'children'])
-                                ->whereNull('parent_id');
+                // Select::make('category_id')
+                //     ->label('Категория')
+                //     ->options(function (CategoryService $service) {
+                //         $categories = $service->getActiveRows(['translations', 'children'])
+                //             ->whereNull('parent_id');
 
-                            return self::buildCategoryOptions($categories);
-                        })
-                        ->searchable()
-                        ->required(),
+                //         return self::buildCategoryOptions($categories);
+                //     })
+                //     ->searchable()
+                //     ->required(),
+
+                Select::make('category_id')
+                    ->label('Категория')
+                    ->options(self::getCategoryOptions())
+                    ->searchable()
+                    ->preload()
+                    ->required(),
 
                     Select::make('supplier_id')
                         ->label('Поставщик')
@@ -322,6 +329,17 @@ class ProductForm
 
                     ])
             ]);
+    }
+
+
+    private static function getCategoryOptions(): array
+    {
+        $service = app(CategoryService::class);
+
+        $categories = $service->getActiveRows(['translations', 'children'])
+            ->whereNull('parent_id');
+
+        return self::buildCategoryOptions($categories);
     }
 
     protected static function makeLangTab(string $locale, string $label): Tab
