@@ -29,18 +29,27 @@ class CategoryForm
 
     public static function configure(Schema $schema): Schema
     {
+        $excludeId = $schema->getState('id') ?? null;
+        $options = self::getCategoryOptionsIndented(excludeId: $excludeId);
+
         return $schema
             ->components([
                 Group::make([
+                    // Select::make('parent_id')
+                    //     ->label('Родительская категория')
+                    //     ->options(fn($get) => self::getCategoryOptionsIndented(excludeId: $get('id')))
+                    //     // ->getOptionLabelUsing(
+                    //     //     fn($value): ?string =>
+                    //     //     $value ? (Category::find($value)?->name . ' (#' . $value . ')') : null
+                    //     // )
+                    //     ->searchable()
+                    //     ->preload()
+                    //     ->nullable(),
+                    
                     Select::make('parent_id')
                         ->label('Родительская категория')
-                        ->options(fn($get) => self::getCategoryOptionsIndented(excludeId: $get('id')))
-                        // ->getOptionLabelUsing(
-                        //     fn($value): ?string =>
-                        //     $value ? (Category::find($value)?->name . ' (#' . $value . ')') : null
-                        // )
+                        ->options($options)  // просто массив, без callback
                         ->searchable()
-                        ->preload()
                         ->nullable(),
 
                     Toggle::make('active')
@@ -68,7 +77,7 @@ class CategoryForm
                 return [];
             }
 
-            $name = $category->translation('hy')?->name ?? '(без названия)';
+            $name = $category->translation('ru')?->name ?? '(без названия)';
 
             // Только первый слой, без рекурсии
             return [(string) $category->id => $prefix . $name];
