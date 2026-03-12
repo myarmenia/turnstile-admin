@@ -37,23 +37,23 @@ class ProductForm
                         ->label('Код товара')
                         ->required(),
 
-                // Select::make('category_id')
-                //     ->label('Категория')
-                //     ->options(function (CategoryService $service) {
-                //         $categories = $service->getActiveRows(['translations', 'children'])
-                //             ->whereNull('parent_id');
+                    // Select::make('category_id')
+                    //     ->label('Категория')
+                    //     ->options(function (CategoryService $service) {
+                    //         $categories = $service->getActiveRows(['translations', 'children'])
+                    //             ->whereNull('parent_id');
 
-                //         return self::buildCategoryOptions($categories);
-                //     })
-                //     ->searchable()
-                //     ->required(),
+                    //         return self::buildCategoryOptions($categories);
+                    //     })
+                    //     ->searchable()
+                    //     ->required(),
 
-                Select::make('category_id')
-                    ->label('Категория')
-                    ->options(self::getCategoryOptions())
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                    Select::make('category_id')
+                        ->label('Категория')
+                        ->options(self::getCategoryOptions())
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
                     Select::make('supplier_id')
                         ->label('Поставщик')
@@ -157,64 +157,7 @@ class ProductForm
                                     ->createItemButtonLabel('Добавить картинку'),
                             ]),
 
-                            // Tab::make('Доп. файлы')->schema([
-                            //     FileUpload::make('additional')
-                            //         ->multiple()
-                            //         ->directory(fn($record) => 'products/' . $record->id . '/additional')
-                            //         ->disk('public'),
-                            // ]),
 
-
-                            // Tab::make('Видео')->schema([
-                            //     Repeater::make('videos')
-                            //         ->label('Видео')
-                            //         ->schema(array_merge([
-                            //             FileUpload::make('path')
-                            //             ->acceptedFileTypes([
-                            //                 'video/mp4',      // стандартный
-                            //                 'video/x-m4v',    // иногда windows/mp4
-                            //                 'video/mpeg',     // возможный fallback
-                            //                 'video/webm',
-                            //                 'video/quicktime'
-                            //             ])
-                            //                 ->directory(fn($record) => 'products/' . $record->id . '/videos')
-                            //                 ->disk('public')
-                            //                 ->maxSize(524288) // 512MB
-                            //                 ->required(),
-                            //         ], array_reduce(array_keys($locales), function ($carry, $lang) use ($locales) {
-                            //             $carry[] = TextInput::make("translations.{$lang}.title")
-                            //                 ->label("Title ({$locales[$lang]})")
-                            //                 ->afterStateHydrated(function ($component, $state) use ($lang) {
-                            //                     $product = $component->getLivewire()->getRecord();
-                            //                     $mainImage = $product?->mainImage();
-
-                            //                     if ($mainImage) {
-                            //                         $translation = $mainImage->translations()->where('lang', $lang)->first();
-                            //                         if ($translation) {
-                            //                             $component->state($translation->title); // для title
-                            //                         }
-                            //                     }
-                            //                 });
-
-                            //             $carry[] = TextInput::make("translations.{$lang}.alt")
-                            //                 ->label("Alt ({$locales[$lang]})")
-                            //                 ->afterStateHydrated(function ($component, $state) use ($lang) {
-                            //                     $product = $component->getLivewire()->getRecord();
-                            //                     $mainImage = $product?->mainImage();
-
-                            //                     if ($mainImage) {
-                            //                         $translation = $mainImage->translations()->where('lang', $lang)->first();
-                            //                         if ($translation) {
-                            //                             $component->state($translation->alt); // для alt
-                            //                         }
-                            //                     }
-                            //                 });
-
-                            //             return $carry;
-                            //         }, [])))
-                            //         ->columns(1)
-                            //         ->createItemButtonLabel('Добавить видео'),
-                            // ]),
 
                             Tab::make('Видео')->schema([
                                 Repeater::make('videos')
@@ -327,7 +270,7 @@ class ProductForm
                                 ]),
                             ]),
 
-                    ])
+                    ])->columnSpan('full')
             ]);
     }
 

@@ -14,6 +14,7 @@ use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use BackedEnum;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -37,14 +38,23 @@ class ProductResource extends Resource
         return ProductsTable::configure($table);
     }
 
+    // protected function hasRelationManagers(): bool
+    // {
+    //     return true;
+    // }
+
     public static function getRelations(): array
     {
         return [
-            ProductMainImageRelationManager::class,
-            ProductSliderRelationManager::class,
-            // ProductAdditionalFilesRelationManager::class,
-            ProductVideoFilesRelationManager::class,
-            ProductDocumentFilesRelationManager::class
+            
+            RelationGroup::make('Contacts', [
+                ProductMainImageRelationManager::class,
+                ProductSliderRelationManager::class,
+                // ProductAdditionalFilesRelationManager::class,
+                ProductVideoFilesRelationManager::class,
+                ProductDocumentFilesRelationManager::class
+            ]),
+
         ];
     }
 
