@@ -20,5 +20,5 @@ Route::middleware(['api.key', 'throttle:60,1'])->group(function () {
 
     Route::get('/products-sitemap', [ProductController::class, 'productsSitemap']);
 
-
+///////////
 });
